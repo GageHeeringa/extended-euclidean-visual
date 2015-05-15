@@ -60,8 +60,8 @@ public class ExtendedEuclideanVisual extends JFrame{
 
 	//image file for Compute b⁻¹ (mod a) button
 	final ImageIcon computeModInverseImage = (new ImageIcon(getClass().getResource("computeModInverseButton.png")));
-	
-	
+
+
 	/** Global Variables */
 
 	//tabs
@@ -121,7 +121,6 @@ public class ExtendedEuclideanVisual extends JFrame{
 		//Main Window
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Extended Euclidean Visual");
-		setIconImage(new ImageIcon(getClass().getResource("Euclid.ico")).getImage());
 
 		setLocation(200, 50);
 		setPreferredSize(new Dimension(574, 674)); //width by height. (was 474,674)
@@ -314,7 +313,7 @@ public class ExtendedEuclideanVisual extends JFrame{
 
 		//mod inverse button
 		_computeModInverseButton = new JButton(computeModInverseImage); //Compute b⁻¹ (mod a)
-		
+
 		//constraints: mod inverse button
 		c.insets = new Insets(15, 20, 15 , 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
