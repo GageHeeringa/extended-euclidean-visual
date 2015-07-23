@@ -1,45 +1,29 @@
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.math.BigInteger;
 
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 
 /**ExtendedEuclideanVisual.java
  * -Dependencies:
  *  	GCDTab.java
  *  	ModInverseTab.java
+ *  	CRTTab.java
  * @author Gage Heeringa
  * 
  * Visualization GUI for 
- * (1) finding the greatest common divisor of two numbers using the Extended Euclidean Algorithm and
- * (2) finding the modular inverse of a number.
- *
+ * (1) finding the greatest common divisor of two numbers using the Extended Euclidean Algorithm,
+ * (2) finding the modular inverse of a number, and
+ * (3) using the Chinese Remainder Theorem to solve systems of congruences. 
+ * 
  * The code in this class is divided into the following sections in this order:
  * 
  * global variables
@@ -75,7 +59,9 @@ import javax.swing.text.StyledDocument;
 
 /**TODO
  * 
- * link to blog explaining each manually
+ * -add painted arrows to show workflow
+ * 
+ * -help tab with images that can click  or  link to blog explaining each manually (remove javadoc example above)
  * 
  */
 public class ExtendedEuclideanVisual extends JFrame{
@@ -86,6 +72,10 @@ public class ExtendedEuclideanVisual extends JFrame{
 	JTabbedPane tabbedPane;
 	JComponent gcdPanel;
 	JComponent modInversePanel;
+	JComponent crtPanel;
+	
+	//JFrame for "Show GCD" option in Mod Inverse & CRT tabs
+	static JFrame extraFrame;
 
 
 	/**Main
@@ -102,8 +92,8 @@ public class ExtendedEuclideanVisual extends JFrame{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Extended Euclidean Visual");
 
-		setLocation(200, 50);
-		setPreferredSize(new Dimension(600, 674)); //width by height. (was 474,674) .. then (was 574,674)
+		setLocation(370, 50);
+		setPreferredSize(new Dimension(600, 674)); //width by height.
 
 		//JTabbedPane
 		tabbedPane = new JTabbedPane();
@@ -119,19 +109,32 @@ public class ExtendedEuclideanVisual extends JFrame{
 		tabbedPane.addTab("Modular Inverse", modInversePanel);
 		tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
 
+		//CRT Tab
+		crtPanel = new CRTTab();
+		tabbedPane.addTab("Chinese Remainder Theorem", crtPanel);
+		tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);;
+		
 		add(tabbedPane);
 		pack(); //fit gui components nicely
 		setVisible(true);
+		
+
+		//extra frame (Show GCD computation) setup
+		extraFrame = new JFrame();
+		extraFrame.setVisible(false);
+		ExtendedEuclideanVisual.extraFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); 
+
 
 	}//end constructor
 
 
 	/**Maintain font color and position in table.
+	 * tab 1 - gcd,  2 - mod inverse,  3 - crt
 	 */
-	static void alignTable(JTable t, boolean modInverseTable){ 
+	static void alignTable(JTable t, int tab){ 
 		DefaultTableCellRenderer renderer0 = new DefaultTableCellRenderer();
 		renderer0.setForeground(Color.BLUE);
-		if(modInverseTable)
+		if( tab > 1)
 			renderer0.setHorizontalAlignment(SwingConstants.CENTER);
 		else
 			renderer0.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -139,7 +142,7 @@ public class ExtendedEuclideanVisual extends JFrame{
 
 		DefaultTableCellRenderer renderer1 = new DefaultTableCellRenderer();
 		renderer1.setForeground(Color.BLACK);
-		if(modInverseTable)
+		if(tab > 1)
 			renderer1.setHorizontalAlignment(SwingConstants.CENTER);
 		else
 			renderer1.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -147,19 +150,22 @@ public class ExtendedEuclideanVisual extends JFrame{
 
 		DefaultTableCellRenderer renderer2 = new DefaultTableCellRenderer();
 		renderer2.setForeground(Color.GREEN);
-		if(modInverseTable)
+		if(tab > 1)
 			renderer2.setHorizontalAlignment(SwingConstants.CENTER);
 		else
 			renderer2.setHorizontalAlignment(SwingConstants.LEFT);
 		t.getColumnModel().getColumn(2).setCellRenderer(renderer2);
 
-		DefaultTableCellRenderer renderer3 = new DefaultTableCellRenderer();
-		renderer3.setForeground(Color.RED);
-		if(modInverseTable)
-			renderer3.setHorizontalAlignment(SwingConstants.CENTER);
-		else
-			renderer3.setHorizontalAlignment(SwingConstants.LEFT);
-		t.getColumnModel().getColumn(3).setCellRenderer(renderer3);
+		//custom cell rendering for last column in GCD & second-to-last in mod inverse
+		if(tab == 3){
+			t.getColumnModel().getColumn(3).setCellRenderer(new CellRendererC(false));
+		}
+		else if(tab == 2){ 
+			t.getColumnModel().getColumn(3).setCellRenderer(new CellRendererC());
+		}
+		else{
+			t.getColumnModel().getColumn(3).setCellRenderer(new CellRendererA());
+		}
 	}//end alignTable()
 
 }//end ExtendedEuclideanVisualization class

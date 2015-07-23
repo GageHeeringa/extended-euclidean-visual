@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,8 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.BigInteger;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.SimpleAttributeSet;
@@ -33,17 +38,20 @@ import javax.swing.text.StyledDocument;
  * constructor
  * gcd()
  * modInverse()
- * declaration of ActionListener class for tab to be interactive
- * declaration of CustomCellRenderer class 
+ * inner declaration of ActionListener class for tab to be interactive
+ * gcdPopup()
  * 
+ * declaration of CellRendererB class (last column in Mod Inverse table)
+ * declaration of GCD_CheckBox ActionListener 
+ * declaration of CellRendererC class (2nd-to-last column in GCD table)
  */
 public class ModInverseTab extends JPanel {
 
 	/** Global Variables */
-	
+
 	//image file for Compute b⁻¹ (mod a) button
 	final ImageIcon computeModInverseImage = (new ImageIcon(getClass().getResource("computeModInverseButton.png")));
-	
+
 	//entry labels & corresponding text field
 	JLabel aLabel;
 	JFormattedTextField aEnter;
@@ -54,13 +62,17 @@ public class ModInverseTab extends JPanel {
 	JButton computeModInverseButton; 
 	JTextPane modInverseAnswer;
 
+	//Show GCD checkbox & listener
+	JCheckBox showGcdCheckBox;
+	GCD_CheckBox checkBoxListener;
+
 	//table (showing GCD computation) maintenance
 	JTable t;
 	JScrollPane scroller;
 
 	//similar congruence label
-	JLabel congr;
-	
+	static JLabel congr;
+
 
 	/**Construct Modular Inverse Tab
 	 */
@@ -106,14 +118,29 @@ public class ModInverseTab extends JPanel {
 		c.insets = new Insets(0, 35 , 0, 55);
 		add(bEnter, c);
 
-		//mod inverse button
-		computeModInverseButton = new JButton(computeModInverseImage); //Compute b⁻¹ (mod a)
+		// jpanel with ___ layout contains computeModInverseButton and Show GCD checkbox
 
-		//constraints: mod inverse button
-		c.insets = new Insets(15, 20, 15 , 0);
+		//mod inverse button & checkbox & its listener
+		computeModInverseButton = new JButton(computeModInverseImage); //Compute b⁻¹ (mod a)
+		showGcdCheckBox = new JCheckBox("Show GCD");
+		checkBoxListener = new GCD_CheckBox(false);
+		showGcdCheckBox.addActionListener(checkBoxListener);
+
+		//panel
+		JPanel pan = new JPanel();
+		BoxLayout boxLayout = new BoxLayout(pan, BoxLayout.X_AXIS); 
+		pan.setLayout(boxLayout);
+
+		pan.add(Box.createRigidArea(new Dimension(80, 0))); //filler to help center computeModInverse button
+		pan.add(computeModInverseButton);
+		pan.add(Box.createRigidArea(new Dimension(10, 0))); //space between button and checkbox
+		pan.add(showGcdCheckBox);
+
+		//constraints: panel
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.fill = GridBagConstraints.NONE;
-		add(computeModInverseButton, c);
+		c.insets = new Insets(10, 0, 10 , 0);
+		add(pan, c);
 
 		//mod inverse answer
 		modInverseAnswer = new JTextPane(){
@@ -157,14 +184,14 @@ public class ModInverseTab extends JPanel {
 		};
 
 		/* table specifications */
-		t.setFont(new Font("Arial", Font.PLAIN, 22));
+		t.setFont(new Font("Arial", Font.PLAIN, 20));
 		t.setRowHeight(24);
 
 		//make 1 = AX + BY column larger
 		t.getColumnModel().getColumn(4).setPreferredWidth(150); //normal in gcd tab is 75 each
-		t.getColumnModel().getColumn(4).setCellRenderer(new CustomCellRenderer());
+		t.getColumnModel().getColumn(4).setCellRenderer(new CellRendererB());
 
-		ExtendedEuclideanVisual.alignTable(t, true);
+		ExtendedEuclideanVisual.alignTable(t, 2);
 
 		//scroller containing table
 		scroller = new JScrollPane(t);
@@ -181,9 +208,11 @@ public class ModInverseTab extends JPanel {
 		computeModInverseButton.addActionListener(computeModInverseListener);
 
 	}//end constructor
-	
+
 
 	/**Find GCD(a,b) and perform pre-computations to find b^-1 (mod a).  Store steps in table.
+	 * NOTE: Because of the way it fills the table, for the Chinese Remainder Thm tab, must check outside the method 
+	 * so that the greater parameter is a!
 	 */
 	static BigInteger gcd(BigInteger a, BigInteger b, Stack s, JTable t){
 		//this print statement won't work if b == 0
@@ -234,8 +263,8 @@ public class ModInverseTab extends JPanel {
 
 		return modInverse(y, s, origSize, t);
 	}//end modInverse()
-	
-	
+
+
 	/**React if Compute Mod Inverse button is pressed.  Ensure entry for a and b are valid.  
 	 * Answer appears in answer label.  Table displays steps.
 	 */
@@ -266,6 +295,7 @@ public class ModInverseTab extends JPanel {
 
 			//if a (the modulus) is less than b, then reduce b (mod a) to smallest integer between 0 and a
 			//OR if b is negative, add the modulus to it so that it is the smallest integer between 0 and a
+			BigInteger originalB = bEntry;
 			if(aEntry.compareTo(bEntry) == -1 || bEntry.compareTo(BigInteger.ZERO) == -1){
 				bEntry = bEntry.mod(aEntry); // b %= a
 				//BigInteger mod() differs from remainder in that it always returns a non-negative BigInteger
@@ -298,7 +328,7 @@ public class ModInverseTab extends JPanel {
 			BigInteger modInverse = modInverse(BigInteger.ZERO, s, s.size, t);
 
 			//DISPLAY SOLUTION
-			
+
 			//if answer was negative, show negative answer computed in table as well as least positive answer between 0 and a
 			String text = bEnter.getText() + "^-1 ≡ "; // b^-1 ≡ 
 
@@ -312,22 +342,162 @@ public class ModInverseTab extends JPanel {
 			text += modInverse.toString() + " (mod " + aEnter.getText() + ")";  // leastPosAnswer (mod a)
 			text += "\n∴ " + bEnter.getText() + "*" + modInverse.toString() + " ≡ 1 (mod " + aEnter.getText() + ")"; 
 			modInverseAnswer.setText( text );
-		}
+
+
+			// -- gcd popup? --
+			if(checkBoxListener.showGcd)
+				gcdPopup(aEntry, bEntry, originalB, 2);
+
+		}//end actionPerformed()
 
 	}//end ModInverseTabListener class
 
-	
-	/**Custom cell rendering for last column (1 = AX + BY) in Modular Inverse Panel.
-	 */
-	private class CustomCellRenderer extends DefaultTableCellRenderer {
-		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
 
-			Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-			c.setFont(new Font("Arial", Font.PLAIN, 17));
-			c.setForeground(Color.BLUE);
-			return c;
+	/**Show pop-up with gcd info.  Used in Mod Inverse, CRT tabs.
+	 * 
+	 * @param a Entry one.
+	 * @param b Entry two.
+	 * @param bOriginal Used only in ModInverseTab.  It is the unsimplified & original entry b (mod a)
+	 * @param tab 1=GCD (unused), 2=ModInverse, 3=CRT
+	 */
+	static void gcdPopup(BigInteger a, BigInteger b, BigInteger bOriginal, int tab){
+
+		// title for pop-up: GCD(k, j)  where k <= j
+		String text;
+		
+		// make clear that the simplification of b(mod a) is being computed for ModInverseTab
+		if( tab == 2){
+			text = String.format("GCD(%s, %s ≡ %s) (mod %s)", 
+					a.toString(), bOriginal.toString(), b.toString(), a.toString()); 
 		}
-	}//end CustomCellRenderer class
-	
-	
+		else{
+			if(a.compareTo(b) == -1)
+				text = "GCD(" + b.toString() + ", " + a.toString() + ") ";
+			else
+				text = "GCD(" + a.toString() + ", " + b.toString() + ") ";
+		}
+
+		
+		//make sure not providing duplicate info, can happen when
+		//(1) the user just hit the button with same input again, or (2) same last gcd computed in other tab
+		if( ExtendedEuclideanVisual.extraFrame.getTitle().equals(text))
+			return;
+
+
+		// --- window setup ---
+		ExtendedEuclideanVisual.extraFrame.getContentPane().removeAll(); //reset frame
+
+		//title
+		ExtendedEuclideanVisual.extraFrame.setTitle(text);
+
+
+		//position slightly lower if there is a congruence simplification shown (ModInverseTab only)
+		if( tab == 2){
+			if(congr.getText().length() > 0){ 
+				ExtendedEuclideanVisual.extraFrame.setLocation(60, 286); // right, down
+			}
+			else{
+				ExtendedEuclideanVisual.extraFrame.setLocation(60, 286 - congr.getHeight());
+			}
+		}
+		else{
+			ExtendedEuclideanVisual.extraFrame.setLocation(60, 286 - congr.getHeight());
+		}
+
+		//size
+		ExtendedEuclideanVisual.extraFrame.setPreferredSize(new Dimension(320, 350)); 
+		//  width by height. (was 474,674) .. then (was 574,674)
+
+
+		// -- add gcd table --
+		//table with gcd computations
+		DefaultTableModel model = new DefaultTableModel(new String[]{"A", "B", "c", "d"}, 0);
+		JTable table = new JTable(model){
+			public boolean isCellEditable(int row, int column){                
+				return false;      
+			};
+		};
+
+		//table specifications
+		ExtendedEuclideanVisual.alignTable(table, 1);
+		table.setFont(new Font("Arial", Font.PLAIN, 18));
+		table.setRowHeight(24);
+		table.getColumnModel().getColumn(3).setCellRenderer(new CellRendererA()); 
+
+		//scroller containing table
+		JScrollPane scrollPane = new JScrollPane(table);
+		ExtendedEuclideanVisual.extraFrame.add(scrollPane);
+
+		//compute
+		if(a.compareTo(b) == -1){
+			GCDTab.gcd(b, a, new Stack(), table);
+		}
+		else{
+			GCDTab.gcd(a, b, new Stack(), table);
+		}
+
+
+		//pack and show
+		ExtendedEuclideanVisual.extraFrame.pack();
+		ExtendedEuclideanVisual.extraFrame.setVisible(true);
+
+	}//end gcdPopup()
 }//end ModInverseTab class
+
+
+/**Custom cell rendering for last column (1 = AX + BY) in Modular Inverse Panel & CRTTab.
+ */
+class CellRendererB extends DefaultTableCellRenderer {
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
+
+		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		c.setFont(new Font("Arial", Font.PLAIN, 17));
+		c.setForeground(Color.BLUE);
+		return c;
+	}
+}//end CellRenderer class
+
+
+/**Set "showGcd" to true or false.
+ */
+class GCD_CheckBox implements ActionListener{
+	boolean showGcd;
+
+	GCD_CheckBox(boolean showGcd){
+		this.showGcd = showGcd;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		showGcd = showGcd ? false : true;
+	}
+
+}//end GCD_CheckBox class
+
+/**Custom cell rendering for second-to-last column (Y) in Modular Inverse Panel & CRTTab.
+ */
+class CellRendererC extends DefaultTableCellRenderer {
+
+	boolean modInverseTabSelected;
+
+	//constructors
+	CellRendererC(){
+		this.modInverseTabSelected = true;
+	}
+	CellRendererC(boolean modInverseTabSelected){
+		this.modInverseTabSelected = modInverseTabSelected ? true : false;
+	}
+
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
+
+		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		c.setForeground(Color.RED);
+		setHorizontalAlignment(SwingConstants.CENTER);
+
+		c.setBackground(Color.WHITE);
+		if(row == 0 && column == table.getColumnCount() - 2 && modInverseTabSelected){
+			c.setBackground(Color.YELLOW);
+		}
+
+		return c;
+	}
+}//end CellRenderer class

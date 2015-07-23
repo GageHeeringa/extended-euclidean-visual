@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -27,8 +30,9 @@ import javax.swing.text.StyledDocument;
  * global variables
  * constructor
  * gcd()
- * declaration of ActionListener class for tab to be interactive
+ * inner declaration of ActionListener class for tab to be interactive
  * 
+ * declaration of CellRendererA class (last column in GCD table)
  */
 public class GCDTab extends JPanel{
 
@@ -145,7 +149,7 @@ public class GCDTab extends JPanel{
 		};
 
 		//table specifications
-		ExtendedEuclideanVisual.alignTable(t, false);
+		ExtendedEuclideanVisual.alignTable(t, 1);
 		t.setFont(new Font("Arial", Font.PLAIN, 22));
 		t.setRowHeight(24);
 
@@ -222,8 +226,26 @@ public class GCDTab extends JPanel{
 			String text = "GCD(" + aEntry.toString() + ", " + bEntry.toString() + ") = " + gcd.toString();
 
 			gcdAnswer.setText( text );
-		}
 
+		}
 	}//end GcdTabListener class 
 
 }//end GCDTab class
+
+
+/**Custom cell rendering for column 3 in GCD Tab (so that the answer can be highlighted).
+ */
+class CellRendererA extends DefaultTableCellRenderer {
+	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
+
+		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		c.setForeground(Color.RED);
+		
+		c.setBackground(Color.WHITE);
+		if(row == table.getRowCount() - 2 && column == table.getColumnCount() - 1){
+			c.setBackground(Color.YELLOW);
+		}
+			
+		return c;
+	}
+}//end CellRenderer class
