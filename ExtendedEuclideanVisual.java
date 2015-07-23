@@ -59,8 +59,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 /**TODO
  * 
- * -add painted arrows to show workflow
- * 
  * -help tab with images that can click  or  link to blog explaining each manually (remove javadoc example above)
  * 
  */

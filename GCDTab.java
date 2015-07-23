@@ -152,6 +152,7 @@ public class GCDTab extends JPanel{
 		ExtendedEuclideanVisual.alignTable(t, 1);
 		t.setFont(new Font("Arial", Font.PLAIN, 22));
 		t.setRowHeight(24);
+		t.getTableHeader().setReorderingAllowed(false);
 
 
 		//scroller containing table
