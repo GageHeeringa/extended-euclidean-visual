@@ -17,12 +17,13 @@ import javax.swing.table.DefaultTableCellRenderer;
  *  	GCDTab.java
  *  	ModInverseTab.java
  *  	CRTTab.java
+ *  	HelpTab.java
  * @author Gage Heeringa
  * 
- * Visualization GUI for 
- * (1) finding the greatest common divisor of two numbers using the Extended Euclidean Algorithm,
- * (2) finding the modular inverse of a number, and
- * (3) using the Chinese Remainder Theorem to solve systems of congruences. 
+ * Visualization GUI to
+ * (1) find the greatest common divisor of two numbers using the Extended Euclidean Algorithm,
+ * (2) find the modular inverse of a number, and
+ * (3) use the Chinese Remainder Theorem to solve a congruence system.
  * 
  * The code in this class is divided into the following sections in this order:
  * 
@@ -32,35 +33,8 @@ import javax.swing.table.DefaultTableCellRenderer;
  * alignTable() method (used in all tabs)
  * declaration of Stack, Pair classes
  * 
+ * 
  * (Code for each tab is in its respective class.)
- * 
- * -----
- * 
- * ex. Euclidean for GCD~~~~~
- * gcd(27,15)
- *
- * 27 = 15(1) + 12        
- * 15 = 12(1) + 3 
- * 12 =  3(4) + 0 -> gcd = 3
- * 
- * ex. Extended Euclidean for modular inverse~~~~~
- * inverse of 5(mod 27)
- * 
- * gcd(5,27) = 1 iff an inverse exists
- * 
- * top to bottom     | bottom to top
- *
- * A     B              X      Y   	(1 = AX + BY)
- * 27 =  5(5) + 2      -2     11     1 = 27(-2) + 5(11) -> 5^-1 (mod 27) = 11
- *  5 =  2(2) + 1       1     -2     1 = 5(1) + 2(-2)
- *  2 =  1(2) + 0       0      1	 1 = 2(0) + 1(1)	
- *    -> gcd = 1
- */
-
-/**TODO
- * 
- * -help tab with images that can click  or  link to blog explaining each manually (remove javadoc example above)
- * 
  */
 public class ExtendedEuclideanVisual extends JFrame{
 
@@ -71,11 +45,15 @@ public class ExtendedEuclideanVisual extends JFrame{
 	JComponent gcdPanel;
 	JComponent modInversePanel;
 	JComponent crtPanel;
+	JComponent helpPanel;
 	
 	//JFrame for "Show GCD" option in Mod Inverse & CRT tabs
 	static JFrame extraFrame;
 
-
+	final static int _WIDTH = 600;
+	final static int _HEIGHT = 674;
+	
+	
 	/**Main
 	 */
 	public static void main(String[] args){
@@ -91,7 +69,7 @@ public class ExtendedEuclideanVisual extends JFrame{
 		setTitle("Extended Euclidean Visual");
 
 		setLocation(370, 50);
-		setPreferredSize(new Dimension(600, 674)); //width by height.
+		setPreferredSize(new Dimension(_WIDTH, _HEIGHT)); //width by height.
 
 		//JTabbedPane
 		tabbedPane = new JTabbedPane();
@@ -112,6 +90,12 @@ public class ExtendedEuclideanVisual extends JFrame{
 		tabbedPane.addTab("Chinese Remainder Theorem", crtPanel);
 		tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);;
 		
+		//help tab
+		helpPanel = new HelpTab();
+		tabbedPane.addTab("Help", helpPanel);
+		tabbedPane.setMnemonicAt(2, KeyEvent.VK_4);;
+		
+		//collect panels in the jframe
 		add(tabbedPane);
 		pack(); //fit gui components nicely
 		setVisible(true);
@@ -121,7 +105,6 @@ public class ExtendedEuclideanVisual extends JFrame{
 		extraFrame = new JFrame();
 		extraFrame.setVisible(false);
 		ExtendedEuclideanVisual.extraFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE); 
-
 
 	}//end constructor
 

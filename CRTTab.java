@@ -51,8 +51,6 @@ import javax.swing.text.StyledDocument;
  */
 public class CRTTab extends JPanel{
 
-	int _WIDTH = 600;
-
 	/** Global Variables in sub-panel 1           */
 	//entry labels & corresponding text field
 	// α ≡ i (mod m)
@@ -99,19 +97,19 @@ public class CRTTab extends JPanel{
 
 		JPanel pan1, pan2, pan3, pan4, pan5, pan6, pan7; //sub-panels
 		pan1 = panel1();
-		pan1.setPreferredSize(new Dimension(_WIDTH, 46)); // main window is 600 width, 674 height
+		pan1.setPreferredSize(new Dimension(ExtendedEuclideanVisual._WIDTH, 46)); // main window is 600 width, 674 height
 		pan2 = panel2();
-		pan2.setPreferredSize(new Dimension(_WIDTH, 46));
+		pan2.setPreferredSize(new Dimension(ExtendedEuclideanVisual._WIDTH, 46));
 		pan3 = panel3();
-		pan3.setPreferredSize(new Dimension(_WIDTH, 46));
+		pan3.setPreferredSize(new Dimension(ExtendedEuclideanVisual._WIDTH, 46));
 		pan4 = panel4();
-		pan4.setPreferredSize(new Dimension(_WIDTH, 36));
+		pan4.setPreferredSize(new Dimension(ExtendedEuclideanVisual._WIDTH, 36));
 		pan5 = panel5();
-		pan5.setPreferredSize(new Dimension(_WIDTH, 120));
+		pan5.setPreferredSize(new Dimension(ExtendedEuclideanVisual._WIDTH, 120));
 		pan6 = panel6();
-		pan6.setPreferredSize(new Dimension(_WIDTH, 168));
+		pan6.setPreferredSize(new Dimension(ExtendedEuclideanVisual._WIDTH, 168));
 		pan7 = panel7();
-		pan7.setPreferredSize(new Dimension(_WIDTH, 167));
+		pan7.setPreferredSize(new Dimension(ExtendedEuclideanVisual._WIDTH, 167));
 
 		add(pan1); add(pan2); add(pan3); add(pan4); add(pan5); add(pan6); add(pan7);
 	}//end constructor
@@ -134,7 +132,7 @@ public class CRTTab extends JPanel{
 		iEnter = new JFormattedTextField();
 		iEnter.setFont(new Font("Arial", Font.PLAIN, 22));
 		alphaLabel1.setLabelFor(iEnter);
-		iEnter.setPreferredSize(new Dimension( _WIDTH/3 , 31));
+		iEnter.setPreferredSize(new Dimension( ExtendedEuclideanVisual._WIDTH/3 , 31));
 		panel.add(iEnter);
 
 		//(mod label
@@ -146,7 +144,7 @@ public class CRTTab extends JPanel{
 		mEnter = new JFormattedTextField();
 		mEnter.setFont(new Font("Arial", Font.PLAIN, 22));
 		leftPar1.setLabelFor(mEnter);
-		mEnter.setPreferredSize(new Dimension( _WIDTH/4 , 31));
+		mEnter.setPreferredSize(new Dimension( ExtendedEuclideanVisual._WIDTH/4 , 31));
 		panel.add(mEnter);
 
 		//) label
@@ -173,7 +171,7 @@ public class CRTTab extends JPanel{
 		jEnter = new JFormattedTextField();
 		jEnter.setFont(new Font("Arial", Font.PLAIN, 22));
 		alphaLabel2.setLabelFor(jEnter);
-		jEnter.setPreferredSize(new Dimension( _WIDTH/3 , 31));
+		jEnter.setPreferredSize(new Dimension( ExtendedEuclideanVisual._WIDTH/3 , 31));
 		panel.add(jEnter);
 
 		//(mod label
@@ -185,7 +183,7 @@ public class CRTTab extends JPanel{
 		nEnter = new JFormattedTextField();
 		nEnter.setFont(new Font("Arial", Font.PLAIN, 22));
 		leftPar2.setLabelFor(nEnter);
-		nEnter.setPreferredSize(new Dimension( _WIDTH/4 , 31));
+		nEnter.setPreferredSize(new Dimension( ExtendedEuclideanVisual._WIDTH/4 , 31));
 		panel.add(nEnter);
 
 		//) label

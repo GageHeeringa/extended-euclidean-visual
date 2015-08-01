@@ -190,8 +190,8 @@ public class GCDTab extends JPanel{
 			return b;
 		return gcd(b, a.remainder(b), s, t);
 	}//end gcd()
-
-
+    
+	
 	/**React if Compute GCD button is pressed.  Ensure entry for a and b are valid.  
 	 * Answer appears in answer label.  Table displays steps.
 	 */
@@ -237,6 +237,7 @@ public class GCDTab extends JPanel{
 /**Custom cell rendering for column 3 in GCD Tab (so that the answer can be highlighted).
  */
 class CellRendererA extends DefaultTableCellRenderer {
+	
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
 
 		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
