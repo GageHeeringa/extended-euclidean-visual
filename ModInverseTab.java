@@ -54,9 +54,6 @@ public class ModInverseTab extends JPanel {
 
 	/** Global Variables */
 
-	//image file for Compute b⁻¹ (mod a) button
-	final ImageIcon computeModInverseImage;
-
 	//entry labels & corresponding text field
 	JLabel aLabel;
 	JFormattedTextField aEnter;
@@ -82,13 +79,11 @@ public class ModInverseTab extends JPanel {
 	/**Construct Modular Inverse Tab
 	 */
 	ModInverseTab() {
-		computeModInverseImage = (new ImageIcon(getClass().getResource("computeModInverseButton.png")));
-
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
 		//a & b labels in top row
-		aLabel = new JLabel("Enter a:", JLabel.CENTER);
+		aLabel = new JLabel("Enter residue:", JLabel.CENTER);
 		aLabel.setFont(new Font("Arial", Font.PLAIN, 22));
 
 		//constraints: a label
@@ -98,37 +93,40 @@ public class ModInverseTab extends JPanel {
 		c.weighty = 0.01;
 		add(aLabel, c);
 
-		bLabel = new JLabel("Enter b:", JLabel.CENTER);
+		bLabel = new JLabel("Enter modulus:", JLabel.CENTER);
 		bLabel.setFont(new Font("Arial", Font.PLAIN, 22));
 
 		//constraints: b label
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		add(bLabel, c);
 
+		bEnter = new JFormattedTextField();
+		bEnter.setFont(new Font("Arial", Font.PLAIN, 22));
+		bLabel.setLabelFor(bEnter);
+
+		//constraints: b entry
+		c.gridwidth = GridBagConstraints.WEST;
+		c.weighty = 0;
+		c.insets = new Insets(0, 55 , 0, 35);
+		add(bEnter, c);
+		
 		//a & b entry text fields in next row
 		aEnter = new JFormattedTextField();
 		aEnter.setFont(new Font("Arial", Font.PLAIN, 22));
 		aLabel.setLabelFor(aEnter);
 
 		//constraints: a entry
-		c.gridwidth = GridBagConstraints.WEST;
-		c.weighty = 0;
-		c.insets = new Insets(0, 55 , 0, 35);
-		add(aEnter, c);
-
-		bEnter = new JFormattedTextField();
-		bEnter.setFont(new Font("Arial", Font.PLAIN, 22));
-		bLabel.setLabelFor(bEnter);
-
-		//constraints: b entry
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.insets = new Insets(0, 35 , 0, 55);
-		add(bEnter, c);
+		add(aEnter, c);
+
 
 		// jpanel with ___ layout contains computeModInverseButton and Show GCD checkbox
 
 		//mod inverse button & checkbox & its listener
-		computeModInverseButton = new JButton(computeModInverseImage); //Compute b⁻¹ (mod a)
+		computeModInverseButton = new JButton("Compute Inverse"); 
+		computeModInverseButton.setFont(new Font("Arial", Font.PLAIN, 20));
+		
 		showGcdCheckBox = new JCheckBox("Show GCD");
 		checkBoxListener = new GCD_CheckBox(false);
 		showGcdCheckBox.addActionListener(checkBoxListener);
@@ -341,7 +339,7 @@ public class ModInverseTab extends JPanel {
 				aEntry = new BigInteger(aEnter.getText());
 				bEntry = new BigInteger(bEnter.getText());
 			} catch(Exception exc){
-				JOptionPane.showMessageDialog(null, "Please enter valid integers for a and b.", "Error", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Enter valid integers for a and b.", "Error", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 
@@ -382,8 +380,8 @@ public class ModInverseTab extends JPanel {
 				String text = bEnter.getText() + "^-1 (mod " + aEnter.getText() + ") D.N.E."; 
 				modInverseAnswer.setText( text );
 				//pop up
-				JOptionPane.showMessageDialog(null, "GCD(a,b) ≠ 1, meaning they are not coprime numbers and a modular inverse does not exist.",
-						"Solution Does Not Exist", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "GCD(a, b) ≠ 1",
+						"Inverse Does Not Exist", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 
@@ -505,6 +503,10 @@ public class ModInverseTab extends JPanel {
 		ExtendedEuclideanVisual.extraFrame.setVisible(true);
 
 	}//end gcdPopup()
+	
+	public void actionPerformed(ActionEvent e) { //DEL
+		System.out.println(getBounds().width);
+	}
 }//end ModInverseTab class
 
 

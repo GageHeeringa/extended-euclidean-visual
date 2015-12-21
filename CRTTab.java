@@ -202,24 +202,24 @@ public class CRTTab extends JPanel{
 		JPanel pan = new JPanel();
 		BoxLayout boxLayout = new BoxLayout(pan, BoxLayout.X_AXIS); 
 		pan.setLayout(boxLayout);
-		
+
 		//solve button
 		solveButton = new JButton("Solve System");
-		solveButton.setFont(new Font("Arial", Font.PLAIN, 22));
-		
+		solveButton.setFont(new Font("Arial", Font.PLAIN, 20));
+
 		//checkbox
 		gcdCheckBox  = new JCheckBox("Show GCD");
-		
+
 		//add to panel
 		pan.add(Box.createRigidArea(new Dimension(80, 0))); //filler to help center button
 		pan.add(solveButton);
 		pan.add(Box.createRigidArea(new Dimension(10, 0))); //space between button and checkbox
 		pan.add(gcdCheckBox);
-	
+
 		//listeners for interactive components
 		CRT_Solve_Listener solveListener = new CRT_Solve_Listener();
 		solveButton.addActionListener(solveListener);
-		
+
 		checkBoxListener = new GCD_CheckBox(false);
 		gcdCheckBox.addActionListener(checkBoxListener);
 
@@ -271,7 +271,7 @@ public class CRTTab extends JPanel{
 				"<b>&#09;&#09;α ≡ i (mod m)<br>&#09;&#09;α ≡ j (mod n)</b>" +
 				"<br><div align=\"left\">Then rewrite it as<br></div>" +
 				"&#09;&nbsp;&nbsp;&nbsp;&nbsp;<b>α ≡ jmy + inx (mod mn)</b></html>";
-		
+
 		JLabel l = new JLabel(text); 
 		l.setFont(new Font("Arial", Font.PLAIN, 18));
 		panel.add(l);
@@ -293,68 +293,68 @@ public class CRTTab extends JPanel{
 			public boolean isCellEditable(int row, int column){ //don't let user edit table               
 				return false;      
 			};
-			
+
 			/**For drawing arrows between cells to clarify workflow.
 			 */
-		    @Override
-		    protected void paintComponent(Graphics g){
-		    	
-		        super.paintComponent(g);
-		 
-		        Graphics2D g2 = (Graphics2D) g;
-		        g2.setStroke(new BasicStroke(2));
-		 
-		        //draw arrows
-		        for (int i = 0; i < getRowCount() - 1; i++)
-		        {
-		        	// -- draw arrow between A,B columns --
-		        	// stem
-		            Rectangle cell = getCellRect(i, 0, false); // cell.x , y = top left corner coords. of rectangle
-		            int outReach = 5; //length to go from paint starting point
-		            Point center = new Point(cell.x + cell.width, cell.y + cell.height); //bottom right corner of cell
-		            Point sw = new Point(center.x - outReach, center.y + outReach); //go southwest. remember x++ is right, y++ is down
-		            Point ne = new Point(center.x + outReach, center.y - outReach); //go northeast
-		            g2.setColor( Color.BLACK);
-		            g2.drawLine(sw.x, sw.y, ne.x, ne.y);
-		            
-		            //now the arrow tip starting from (sw.x, sw.y) - upper part here
-		            outReach = 6;
-		            center = new Point(sw.x, sw.y);
-		            Point north = new Point(center.x, center.y - outReach); 
-		            g2.drawLine(center.x, center.y, north.x, north.y);
-		            
-		            //lower part of arrow tip
-		            Point e = new Point(center.x + outReach, center.y); //east
-		            g2.drawLine(center.x, center.y, e.x, e.y);
-		            
-		            
-		            // -- X,Y columns --
-		            cell = getCellRect(i, 2, false);
-		            outReach = 5; 
-		            center = new Point(cell.x + cell.width, cell.y + cell.height); //bottom right corner of cell
-		            Point nw = new Point(center.x - outReach, center.y - outReach); 
-		            Point se = new Point(center.x + outReach, center.y + outReach); 
-		            g2.drawLine(nw.x, nw.y, se.x, se.y);
-		            
-		            //horizontal tip (above other part)
-		            outReach = 6;
-		            center = new Point(nw.x, nw.y);
-		            e = new Point(center.x + outReach, center.y ); 
-		            g2.drawLine(center.x, center.y, e.x, e.y);
-		            
-		            //vertical tip (lower)
-		            Point south = new Point(center.x, center.y + outReach);
-		            g2.drawLine(center.x, center.y, south.x, south.y);
-		      
-		        }
-		    }// end paintComponent()
+			@Override
+			protected void paintComponent(Graphics g){
+
+				super.paintComponent(g);
+
+				Graphics2D g2 = (Graphics2D) g;
+				g2.setStroke(new BasicStroke(2));
+
+				//draw arrows
+				for (int i = 0; i < getRowCount() - 1; i++)
+				{
+					// -- draw arrow between A,B columns --
+					// stem
+					Rectangle cell = getCellRect(i, 0, false); // cell.x , y = top left corner coords. of rectangle
+					int outReach = 5; //length to go from paint starting point
+					Point center = new Point(cell.x + cell.width, cell.y + cell.height); //bottom right corner of cell
+					Point sw = new Point(center.x - outReach, center.y + outReach); //go southwest. remember x++ is right, y++ is down
+					Point ne = new Point(center.x + outReach, center.y - outReach); //go northeast
+					g2.setColor( Color.BLACK);
+					g2.drawLine(sw.x, sw.y, ne.x, ne.y);
+
+					//now the arrow tip starting from (sw.x, sw.y) - upper part here
+					outReach = 6;
+					center = new Point(sw.x, sw.y);
+					Point north = new Point(center.x, center.y - outReach); 
+					g2.drawLine(center.x, center.y, north.x, north.y);
+
+					//lower part of arrow tip
+					Point e = new Point(center.x + outReach, center.y); //east
+					g2.drawLine(center.x, center.y, e.x, e.y);
+
+
+					// -- X,Y columns --
+					cell = getCellRect(i, 2, false);
+					outReach = 5; 
+					center = new Point(cell.x + cell.width, cell.y + cell.height); //bottom right corner of cell
+					Point nw = new Point(center.x - outReach, center.y - outReach); 
+					Point se = new Point(center.x + outReach, center.y + outReach); 
+					g2.drawLine(nw.x, nw.y, se.x, se.y);
+
+					//horizontal tip (above other part)
+					outReach = 6;
+					center = new Point(nw.x, nw.y);
+					e = new Point(center.x + outReach, center.y ); 
+					g2.drawLine(center.x, center.y, e.x, e.y);
+
+					//vertical tip (lower)
+					Point south = new Point(center.x, center.y + outReach);
+					g2.drawLine(center.x, center.y, south.x, south.y);
+
+				}
+			}// end paintComponent()
 		};
 
 		/* table specifications */
 		t.setFont(new Font("Arial", Font.PLAIN, 20));
 		t.setRowHeight(24); //24 on mod inverse tab
 		t.getTableHeader().setReorderingAllowed(false);
-		
+
 		//make 1 = AX + BY column larger
 		t.getColumnModel().getColumn(4).setPreferredWidth(150); 
 		t.getColumnModel().getColumn(4).setCellRenderer(new CellRendererB());
@@ -423,7 +423,7 @@ public class CRTTab extends JPanel{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+
 			//attempt to read input
 			BigInteger iEntry, mEntry, jEntry, nEntry = new BigInteger("0");
 			try{
@@ -432,7 +432,7 @@ public class CRTTab extends JPanel{
 				jEntry = new BigInteger(jEnter.getText());
 				nEntry = new BigInteger(nEnter.getText());
 			} catch(Exception exc){
-				JOptionPane.showMessageDialog(null, "Please enter valid integers.", "Error", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Enter valid integers.", "Error", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 
@@ -441,7 +441,7 @@ public class CRTTab extends JPanel{
 				JOptionPane.showMessageDialog(null, "The moduli must be positive.", "Error", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
-			
+
 			//clear old labels 
 			crtAnswer.setText("");
 			DefaultTableModel dm = (DefaultTableModel) answerTable.getModel();
@@ -458,19 +458,15 @@ public class CRTTab extends JPanel{
 
 			//compute gcd
 			Stack s = new Stack();
-			//switch parameters if n (the second modulus) is greater than m (the first modulus)
-			if(nEntry.compareTo(mEntry) < 0)
-				gcd = ModInverseTab.gcd(mEntry, nEntry, s, t);
-			else
-				gcd = ModInverseTab.gcd(nEntry, mEntry, s, t);
-			
+			gcd = ModInverseTab.gcd(nEntry, mEntry, s, t);
+
 			// m,n must be coprime (...for this program)
 			if(!gcd.equals(BigInteger.ONE)){
 				crtAnswer.setText("Irreducible Answer");
 
 				//pop up - solution does not exist
-				JOptionPane.showMessageDialog(null, "Please enter moduli that are coprime.",
-						"Error", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "GCD(a, b) ≠ 1",
+						"Solution Does Not Exist", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 
@@ -481,7 +477,7 @@ public class CRTTab extends JPanel{
 			String[] sol = ((String) t.getModel().getValueAt(0, 4)).split(" "); //1 = 5(3) + 7(-2) becomes [1, =, 5(3), +, 7(-2)]
 			BigInteger a = new BigInteger(sol[2].substring( 0, sol[2].indexOf("("))); //extract a
 			BigInteger b = new BigInteger(sol[4].substring( 0, sol[4].indexOf("("))); //extract b
-			
+
 			BigInteger x = new BigInteger(sol[2].substring( sol[2].indexOf("(")+1, sol[2].indexOf(")"))); //extract x
 			BigInteger y = new BigInteger(sol[4].substring( sol[4].indexOf("(")+1, sol[4].indexOf(")"))); //extract y
 
@@ -498,11 +494,11 @@ public class CRTTab extends JPanel{
 			//rename entry variables for convenience...
 			BigInteger i,m,j,n; // & we have: x, y, answer, finalAnswer, newModulus, sum1, sum2
 			i = iEntry; m = mEntry; j = jEntry; n = nEntry;
-			
-		
+
+
 			//set answer label
 			crtAnswer.setText("α ≡ " + finalAnswer + " (mod " + newModulus.toString() + ")");
-			
+
 			//set explanation in last panel
 			DefaultTableModel model = (DefaultTableModel) answerTable.getModel();
 			answerTable.setValueAt(String.format(" 1 = ax + by"), 0, 0); 
@@ -519,11 +515,23 @@ public class CRTTab extends JPanel{
 				answerTable.setValueAt(String.format("<html>&nbsp;&nbsp; <b>≡ %s (mod %s)</b></html>", finalAnswer, newModulus), 5, 0);
 			}
 
-			
+
 			// -- gcd popup? --
 			if(checkBoxListener.showGcd)
 				ModInverseTab.gcdPopup(nEntry, mEntry, null, 3);
-			
+
+			//to rearrange A,B columns if n < m
+			s = new Stack();
+			//switch parameters if n (the second modulus) is greater than m (the first modulus)
+			if(nEntry.compareTo(mEntry) < 0){
+				dm = (DefaultTableModel) t.getModel();
+				for(int k = dm.getRowCount() - 1; k >= 0; k--){
+					dm.removeRow(k);
+				}
+				gcd = ModInverseTab.gcd(mEntry, nEntry, s, t);
+				ModInverseTab.modInverse(BigInteger.ZERO, s, s.size, t);
+			}
+
 		}//end actionPerformed()
 
 	}//end CRTTabListener class

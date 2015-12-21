@@ -1,0 +1,159 @@
+-----------------------------------  GCD  -----------------------------------
+<html>Let $A$ be the greater integer, $B$ the other.<br>
+For each row:<br>
+• Find the divisor $d$ and remainder $r$ for $A=B*d + r$.<br>
+• On a new row:<br>
+$\space\space\space$• new $A = B$ from the previous row<br>
+$\space\space\space$• new $B = r$ from the previous row.<br>
+• Stop when $r = 0$ or $r = 1$. The most recent non-zero $r$ is the solution. 
+</html>
+$$Example: GCD(27, 95)$$
+\begin{array}{|c|c|c|c|}
+\hline
+A& B & d  & r \\ \hline 
+ 95=&27 &(3) &+14\\ \hline
+ 27=&14 &(1) &+13\\ \hline
+  14=&13 &(1) &+1\\ \hline
+ 13=&1 &(13) &+0\\ \hline
+\end{array}
+$$∴ GCD(27,95) = 1$$
+
+
+
+
+-----------------------------------  Mod Inverse  -----------------------------------
+<html>
+To find $a^{-1}$ (mod $b$), we require $GCD(a, b) = 1$.<br>
+That is, $a$ and $b$ must be coprime.<br>
+
+**The reason why:**<br>
+$a^{-1}$ (mod $b$) exists means there is an $x$ such that $ax \equiv 1$ (mod $b$).<br>
+-> $ax - 1 \equiv 0$ (mod $b$)<br>
+-> b | $(ax - 1)$<br>
+-> There is a y such that $ax - 1 = by $.<br>
+-> $ax - by = 1 $<br>
+-> $ax + b(-y) = 1 $.<br>
+So finding $a^{-1}$ (mod $b$) equates to writing $1$ as a linear combination of $a$ and $b$.<br>
+Now let $d = GCD(a, b)$.<br>
+$d$ | $ax + b(-y)$ by definition, since $GCD(a, b)$ divides both $a$ and $b$.<br>
+But $1 = ax + b(-y)$.<br>
+So if $d \ne 1$, $d \nmid 1 $ and $d \nmid ax + b(-y)$.<br>
+
+$$Example: 103^{-1} \space(mod \space36)$$
+The modulus is less than the residue, so reduce $103$ by multiples of $36$<br> to be between [$0$, $35$].<br>
+$ 103 \equiv 67 \equiv 31$ (mod $36$).<br>
+Since $103 \equiv 31$, we can instead find $GCD(31, 36)$.
+\begin{array}{|c|c|c|c|}
+\hline 
+A & B&d  &r \\ \hline 
+ 36=&31 &(1) &+5\\ \hline 
+ 31=&5 &(6) &+1\\ \hline 
+  5=&1 &(5) &+0\\ \hline 
+\end{array}
+$GCD(31, 36) = 1$, so an inverse exists.<br>
+
+Now to complete the inverse table.<br>
+First, fill in the $A$ and $B$ values found from computing the GCD.
+\begin{array}{|c|c|c|c|c|}
+\hline
+A& B & X & Y & 1 = AX + BY\\ \hline 
+ 36&31 & & &1 = 36x + 31y\\ \hline
+ 31&5 & & &1 = 31x + 5y\\ \hline
+  5&1 & & &1 = 5x + 1y\\ \hline
+\end{array}
+
+Then, begin at the last row.<br>
+Find $X$, $Y$ such that $1 = AX + BY$ and move up the table row by row.<br>
+When moving up a row, the new $X = Y$ from the row below it.<br>
+The last $Y$ value, computed in the top row, is the solution.
+
+\begin{array}{|c|c|c|c|c|}
+\hline
+A& B & X & Y & 1 = AX + BY\\ \hline 
+ 36&31 & -6& 7&1 = 36x + 31y\\ \hline
+ 31&5 & 1&-6 &1 = 31x + 5y\\ \hline
+  5&1 & 0&1 &1 = 5x + 1y\\ \hline
+\end{array}
+
+$∴ 103^{-1} \equiv 31^{-1} \equiv 7 $ (mod $36$).<br>
+So $103*7 \equiv 31*7 \equiv 1$ (mod $36$).
+</html>
+
+
+
+
+
+-----------------------------------  CRT  -----------------------------------
+<html>
+Here are two methods for solving a system of congruences where the<br>moduli are pairwise coprime.<br>
+The first method, how this program solves a system, is more computational.<br>
+The second is more intuitive.
+
+\begin{array}{c}
+Method \space1:\space Solve\space the\space system \\ 
+\alpha \equiv 4\space (mod \space 5)\\ 
+\alpha \equiv 7\space (mod \space 11)\\ 
+\end{array}
+
+If the moduli ($5$ and $11$) are coprime, then the system can be reduced<br> to a single congruence.<br>
+\begin{array}{|c|c|c|c|}
+\hline
+A& B & d  & r \\ \hline 
+ 11=&5 &(2) &+1\\ \hline
+ 5=&1 &(5) &+0\\ \hline
+\end{array}
+
+So $GCD(11, 5) = 1$.  Now consider the system as 
+\begin{array}{c}
+\alpha \equiv i\space (mod \space m)\\ 
+\alpha \equiv j\space (mod \space n)\\ 
+\end{array}
+
+By completing the table for $5^{-1}$ (mod $11$), values for $x$ and $y$ are<br>computed such that
+\begin{array}{c}
+\alpha \equiv jmy\space +\space inx\space(mod \space mn)\\ 
+\end{array}
+
+Have: $i, j, m, n$<br>
+Need: $x, y$
+
+\begin{array}{|c|c|c|c|c|}
+\hline
+A& B & X & Y & 1 = AX + BY\\ \hline 
+ 11&5 & 1& -2&1 = 11(1) + 5(-2)\\ \hline
+ 5&1 & 0&1 &1 = 5(0) + 1(1)\\ \hline
+\end{array}
+
+Now $\alpha \equiv jmy\space +\space inx\space(mod \space mn)$<br>
+$\space\space\space\space\space\space\space\space\space\space\space\equiv 7(5)(-2)\space +\space 4(11)(1)\space$<br>
+$\space\space\space\space\space\space\space\space\space\space\space\equiv -70\space +\space 44\space$<br>
+$\space\space\space\space\space\space\space\space\space\space\space\equiv -26\space(mod \space 5*11)$<br>
+
+Add the new modulus $5*11 = 55$ to the solution until it is non-negative:<br>
+$\space\space\space-26\equiv 29\space(mod \space 55)$<br>
+$∴\space\space\space\space\space\space\alpha\equiv 29\space(mod \space 55)$<br>
+
+
+\begin{array}{c}
+Method \space2:\space Solve\space the\space system \\ 
+\alpha \equiv 4\space (mod \space 5)\\ 
+\alpha \equiv 7\space (mod \space 11)\\ 
+\end{array}
+
+$\alpha \equiv 4$ (mod $\space 5$) means $\alpha$ is in the form $5k + 4$ for any integer $k$.<br>
+Take this first congruence and plug it in for $\alpha$ in the second congruence.<br>
+
+So $5k + 4 \equiv 7$ (mod $\space 11$)<br>
+-> $5k \equiv 3$ <br>
+-> $k \equiv 5^{-1}*3$ (mod $\space 11$)<br>
+
+Now compute the table for $5^{-1}$ (mod $\space 11$), or notice that $5*9 \equiv 45$<br>$ \equiv 1 $ (mod $\space 11$).<br>
+So $k \equiv 9*3 \equiv 27 $ (mod $\space 11$)<br>
+
+Now plug back in $k$.<br>
+$\alpha$, for our system, is in the form $5k + 4$  (mod $\space 5*11$).<br>
+$5k + 4 \equiv 5(27) + 4 \equiv 139 \equiv 29$ (mod $\space 55$)<br>
+$∴\space\alpha\equiv 29\space(mod \space 55)$
+
+
+</html>

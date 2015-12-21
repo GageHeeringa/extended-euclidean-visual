@@ -100,10 +100,10 @@ public class GCDTab extends JPanel{
 
 		//gcd button
 		computeGcdButton = new JButton("Compute GCD");
-		computeGcdButton.setFont(new Font("Arial", Font.PLAIN, 22));
+		computeGcdButton.setFont(new Font("Arial", Font.PLAIN, 20));
 
 		//constraints: gcd button
-		c.insets = new Insets(15, 20, 15 , 0);
+		c.insets = new Insets(10, 20, 10 , 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.fill = GridBagConstraints.NONE;
 		add(computeGcdButton, c);
@@ -130,7 +130,7 @@ public class GCDTab extends JPanel{
 		add(gcdAnswer, c);
 
 		//label: A = B*(c) + d
-		JLabel temp = new JLabel("A = B*(c) + d");
+		JLabel temp = new JLabel("A = B*d + r");
 		temp.setFont(new Font("Arial", Font.PLAIN, 22));
 
 		//constraints: label
@@ -204,13 +204,13 @@ public class GCDTab extends JPanel{
 				aEntry = new BigInteger(aEnter.getText());
 				bEntry = new BigInteger(bEnter.getText());
 			} catch(Exception exc){
-				JOptionPane.showMessageDialog(null, "Please enter valid integers for a and b.", "Error", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Enter valid integers for a and b.", "Error", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 
 			//make sure a,b are not 0
 			if(aEntry.equals(BigInteger.ZERO) || bEntry.equals(BigInteger.ZERO)){
-				JOptionPane.showMessageDialog(null, "Please enter valid integers for a and b.", "Error", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Enter valid integers for a and b.", "Error", JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
 

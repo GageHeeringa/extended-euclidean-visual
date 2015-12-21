@@ -20,9 +20,9 @@ public class HelpTab extends JPanel{
 	/**Constructor
 	 */
 	HelpTab(){
-		gcdEx = (new ImageIcon(getClass().getResource("GCD Example.png")));
-		modInvEx = (new ImageIcon(getClass().getResource("Mod Inverse Example.png")));
-		crtEx = (new ImageIcon(getClass().getResource("CRT Example.png")));
+		gcdEx = (new ImageIcon(getClass().getResource("gcdEx.png")));
+		modInvEx = (new ImageIcon(getClass().getResource("modInverseEx.png")));
+		crtEx = (new ImageIcon(getClass().getResource("crtEx.png")));
 
 		setLayout(new GridLayout(1,1));
 
